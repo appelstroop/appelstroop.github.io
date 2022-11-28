@@ -1,5 +1,5 @@
 
-# How to deploy App Runner with a VPC connection in CDK
+# Deploy AWS App Runner with a VPC connection using CDK
 #### 28-11-2022 *Jasper Hoving*
 <br />
 Apprunner is one of the easiest ways to deploy containers on AWS. Launched in May 2021, AWS App Runner was positioned as a competitor to Google Cloud Run and as an alternative to running containers on Fargate.
