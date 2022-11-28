@@ -1,6 +1,7 @@
-
 # Deploy AWS App Runner with a VPC connection using CDK
-#### 28-11-2022 *Jasper Hoving*
+
+#### 28-11-2022 _Jasper Hoving_
+
 <br />
 Apprunner is one of the easiest ways to deploy containers on AWS. Launched in May 2021, AWS App Runner was positioned as a competitor to Google Cloud Run and as an alternative to running containers on Fargate.
 
@@ -87,6 +88,14 @@ const dbCluster = new DatabaseCluster(this, "ApprunnerCdkExampleDBCluster", {
 dbCluster.connections.allowFrom(dbCluster, Port.tcp(5432));
 ```
 
+If you want to use the created DB secrets later on in your cdk code - to retrieve host/username/password, you can use:
+
+```typescript
+// use DB secret credentials or create new one. You can use this secret in the rest of your cdk code if you want
+const dbSecrets =
+  dbCluster.secret ?? new Secret(this, "ApprunnerCdkExampleDBSecrets");
+```
+
 To be able to let our App Runner service connect to the VPC, we have to create a VPC Connector. Luckily, we can also do this in CDK!
 
 ```typescript
@@ -103,7 +112,7 @@ const vpcConnector = new CfnVpcConnector(
 );
 ```
 
-Then we need to setup our IAM roles for App Runner. There are two kinds of roles relevant for app runner. The *access role* manages the permission to the ECR repository and in the *instance role* you can define access to other AWS services that the service needs at runtime.
+Then we need to setup our IAM roles for App Runner. There are two kinds of roles relevant for app runner. The _access role_ manages the permission to the ECR repository and in the _instance role_ you can define access to other AWS services that the service needs at runtime.
 
 ```typescript
 const accessRole = new Role(this, "ApprunnerCdkExampleAccessRole", {
@@ -191,7 +200,7 @@ new CfnOutput(this, "AppRunnerServiceUrl", {
 
 And there you go! A deployed container in App Runner deployed via CDK 🚀
 
-**Oh, one more thing.** If you want to configure autoscaling for apprunner, the only thing you can do in the *CnfService* is to provide an ARN to the autoscaling configuration. If you want to create this configuration in cdk, you have to use a custom resource for this (as far as I know, this is the only way to do it). I've created a construct for this, see usage in the [example github repo](https://github.com/appelstroop/apprunner-cdk-example).
+**Oh, one more thing.** If you want to configure autoscaling for apprunner, the only thing you can do in the _CnfService_ is to provide an ARN to the autoscaling configuration. If you want to create this configuration in cdk, you have to use a custom resource for this (as far as I know, this is the only way to do it). I've created a construct for this, see usage in the [example github repo](https://github.com/appelstroop/apprunner-cdk-example).
 
 ```typescript
 export class AppRunnerAutoScaling extends Construct {
@@ -243,7 +252,7 @@ export class AppRunnerAutoScaling extends Construct {
 }
 ```
 
-Then, add it to the stack and enable the *autoScalingConfigurationArn* in the CfnService of the App Runner:
+Then, add it to the stack and enable the _autoScalingConfigurationArn_ in the CfnService of the App Runner:
 
 ```typescript
 // Create autoscaling from custom construct
@@ -262,6 +271,3 @@ const appRunnerAutoScaling = new AppRunnerAutoScaling(
  autoScalingConfigurationArn: appRunnerAutoScaling.autoScalingConfigurationArn,
 // ... rest of CfnService
 ```
-
-
-
