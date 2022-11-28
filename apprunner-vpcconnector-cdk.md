@@ -198,7 +198,7 @@ new CfnOutput(this, "AppRunnerServiceUrl", {
 });
 ```
 
-And there you go! A deployed container in App Runner deployed via CDK 🚀
+And there you go! A container in App Runner deployed via CDK 🚀
 
 **Oh, one more thing.** If you want to configure autoscaling for apprunner, the only thing you can do in the _CnfService_ is to provide an ARN to the autoscaling configuration. If you want to create this configuration in cdk, you have to use a custom resource for this (as far as I know, this is the only way to do it). I've created a construct for this, see usage in the [example github repo](https://github.com/appelstroop/apprunner-cdk-example).
 
